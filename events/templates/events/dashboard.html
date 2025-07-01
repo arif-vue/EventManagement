@@ -1,0 +1,77 @@
+{% extends 'events/base.html' %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold mb-6">Organizer Dashboard</h1>
+    
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-2">Total Participants</h2>
+            <p class="text-3xl text-blue-600">{{ total_participants }}</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-2">Total Events</h2>
+            <p class="text-3xl text-green-600">{{ total_events }}</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-2">Upcoming Events</h2>
+            <p class="text-3xl text-yellow-600">{{ upcoming_events }}</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-2">Past Events</h2>
+            <p class="text-3xl text-red-600">{{ past_events }}</p>
+        </div>
+    </div>
+    
+    <!-- Today's Events -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Today's Events</h2>
+        {% if todays_events %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b">Name</th>
+                            <th class="py-2 px-4 border-b">Time</th>
+                            <th class="py-2 px-4 border-b">Location</th>
+                            <th class="py-2 px-4 border-b">Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in todays_events %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4 border-b">
+                                <a href="{% url 'event-detail' event.pk %}" class="text-blue-600 hover:underline">
+                                    {{ event.name }}
+                                </a>
+                            </td>
+                            <td class="py-2 px-4 border-b">{{ event.time }}</td>
+                            <td class="py-2 px-4 border-b">{{ event.location }}</td>
+                            <td class="py-2 px-4 border-b">{{ event.category.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500">No events scheduled for today.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Search Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Search Events</h2>
+        <form method="get" action="{% url 'event-list' %}" class="flex flex-col md:flex-row gap-4">
+            <input type="text" name="search" placeholder="Search by name or location" 
+                   class="flex-grow p-2 border rounded-md">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

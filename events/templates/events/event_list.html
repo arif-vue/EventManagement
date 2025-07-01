@@ -1,0 +1,99 @@
+{% extends 'events/base.html' %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold mb-4 md:mb-0">Events</h1>
+    <div>
+        <a href="{% url 'event-create' %}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+            <i class="fas fa-plus mr-2"></i>Add Event
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="bg-white p-4 rounded-lg shadow-md mb-6">
+    <h2 class="text-xl font-semibold mb-3">Filters</h2>
+    <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Category</label>
+            <select name="category" class="mt-1 block w-full p-2 border rounded-md">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Start Date</label>
+            <input type="date" name="start_date" value="{{ request.GET.start_date }}" 
+                   class="mt-1 block w-full p-2 border rounded-md">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700">End Date</label>
+            <input type="date" name="end_date" value="{{ request.GET.end_date }}" 
+                   class="mt-1 block w-full p-2 border rounded-md">
+        </div>
+        
+        <div class="md:col-span-3">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                <i class="fas fa-filter mr-2"></i>Apply Filters
+            </button>
+            <a href="{% url 'event-list' %}" class="ml-2 text-gray-600 hover:text-gray-800">
+                <i class="fas fa-sync mr-1"></i>Reset
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Events Table -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    {% if events %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Date & Time</th>
+                    <th class="py-3 px-4 text-left">Location</th>
+                    <th class="py-3 px-4 text-left">Category</th>
+                    <th class="py-3 px-4 text-left">Participants</th>
+                    <th class="py-3 px-4 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="py-3 px-4">
+                        <a href="{% url 'event-detail' event.pk %}" class="text-blue-600 hover:underline">
+                            {{ event.name }}
+                        </a>
+                    </td>
+                    <td class="py-3 px-4">{{ event.date }} at {{ event.time }}</td>
+                    <td class="py-3 px-4">{{ event.location }}</td>
+                    <td class="py-3 px-4">{{ event.category.name }}</td>
+                    <td class="py-3 px-4">{{ event.participant_count }}</td>
+                    <td class="py-3 px-4 flex space-x-2">
+                        <a href="{% url 'event-update' event.pk %}" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'event-delete' event.pk %}" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="p-8 text-center text-gray-500">
+        <i class="fas fa-calendar-times text-4xl mb-4"></i>
+        <p class="text-xl">No events found</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
