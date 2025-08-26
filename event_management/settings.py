@@ -96,10 +96,10 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://event_management_db_j163_user:8ngdm0IU4JLIDukC2IbUmcEM60b2pA9I@dpg-d2mp9b15pdvs73953k5g-a.oregon-postgres.render.com/event_management_db_j163',
+        conn_max_age=600
+    )
 }
 
 
