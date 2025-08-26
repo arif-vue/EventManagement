@@ -1,77 +1,140 @@
 {% extends 'events/base.html' %}
 
 {% block content %}
-<div class="mb-8">
-    <h1 class="text-3xl font-bold mb-6">Organizer Dashboard</h1>
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">
+        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+    </h1>
     
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold mb-2">Total Participants</h2>
-            <p class="text-3xl text-blue-600">{{ total_participants }}</p>
-        </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold mb-2">Total Events</h2>
-            <p class="text-3xl text-green-600">{{ total_events }}</p>
-        </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold mb-2">Upcoming Events</h2>
-            <p class="text-3xl text-yellow-600">{{ upcoming_events }}</p>
-        </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold mb-2">Past Events</h2>
-            <p class="text-3xl text-red-600">{{ past_events }}</p>
-        </div>
-    </div>
-    
-    <!-- Today's Events -->
-    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Today's Events</h2>
-        {% if todays_events %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white">
-                    <thead>
-                        <tr>
-                            <th class="py-2 px-4 border-b">Name</th>
-                            <th class="py-2 px-4 border-b">Time</th>
-                            <th class="py-2 px-4 border-b">Location</th>
-                            <th class="py-2 px-4 border-b">Category</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for event in todays_events %}
-                        <tr class="hover:bg-gray-50">
-                            <td class="py-2 px-4 border-b">
-                                <a href="{% url 'event-detail' event.pk %}" class="text-blue-600 hover:underline">
-                                    {{ event.name }}
-                                </a>
-                            </td>
-                            <td class="py-2 px-4 border-b">{{ event.time }}</td>
-                            <td class="py-2 px-4 border-b">{{ event.location }}</td>
-                            <td class="py-2 px-4 border-b">{{ event.category.name }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-500 text-white">
+                    <i class="fas fa-users text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Total Users</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_users }}</p>
+                </div>
             </div>
-        {% else %}
-            <p class="text-gray-500">No events scheduled for today.</p>
-        {% endif %}
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-500 text-white">
+                    <i class="fas fa-calendar text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Total Events</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_events }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-500 text-white">
+                    <i class="fas fa-clock text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Upcoming Events</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ upcoming_events }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-red-500 text-white">
+                    <i class="fas fa-history text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm text-gray-600">Past Events</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ past_events }}</p>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <!-- Search Section -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-4">Search Events</h2>
-        <form method="get" action="{% url 'event-list' %}" class="flex flex-col md:flex-row gap-4">
-            <input type="text" name="search" placeholder="Search by name or location" 
-                   class="flex-grow p-2 border rounded-md">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                <i class="fas fa-search mr-2"></i>Search
-            </button>
-        </form>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Today's Events -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-calendar-day mr-2"></i>Today's Events
+            </h2>
+            {% if todays_events %}
+                <div class="space-y-3">
+                    {% for event in todays_events %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-semibold text-gray-800">{{ event.name }}</h3>
+                                <p class="text-sm text-gray-600">
+                                    <i class="fas fa-clock mr-1"></i>{{ event.time|time:"H:i" }}
+                                    <span class="ml-2">
+                                        <i class="fas fa-map-marker-alt mr-1"></i>{{ event.location }}
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                                {{ event.category.name }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">No events scheduled for today.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Quick Actions or User Events -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            {% if user.groups.all and user.groups.first.name in "Admin,Organizer" %}
+                <h2 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-plus mr-2"></i>Quick Actions
+                </h2>
+                <div class="space-y-3">
+                    <a href="{% url 'event_create' %}" class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700 transition duration-200">
+                        <i class="fas fa-calendar-plus mr-2"></i>Create New Event
+                    </a>
+                    <a href="{% url 'category_create' %}" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg hover:bg-green-700 transition duration-200">
+                        <i class="fas fa-tag mr-2"></i>Create New Category
+                    </a>
+                    {% if user.groups.all and user.groups.first.name == "Admin" %}
+                        <a href="{% url 'user-list' %}" class="block w-full bg-purple-600 text-white text-center py-3 rounded-lg hover:bg-purple-700 transition duration-200">
+                            <i class="fas fa-users-cog mr-2"></i>Manage Users
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <h2 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-user-calendar mr-2"></i>My Events
+                </h2>
+                {% if user_events %}
+                    <div class="space-y-3">
+                        {% for event in user_events %}
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <h3 class="font-semibold text-gray-800">{{ event.name }}</h3>
+                                <p class="text-sm text-gray-600">
+                                    <i class="fas fa-calendar mr-1"></i>{{ event.date|date:"M d, Y" }}
+                                    <span class="ml-2">
+                                        <i class="fas fa-clock mr-1"></i>{{ event.time|time:"H:i" }}
+                                    </span>
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'event_list' %}" class="block text-center text-blue-600 hover:text-blue-800 mt-4">
+                        View all events →
+                    </a>
+                {% else %}
+                    <p class="text-gray-500 text-center py-4">You haven't joined any events yet.</p>
+                    <a href="{% url 'event_list' %}" class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700 transition duration-200">
+                        <i class="fas fa-search mr-2"></i>Browse Events
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

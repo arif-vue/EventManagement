@@ -1,51 +1,113 @@
 {% extends 'events/base.html' %}
 
-{% block content %}
-<div class="flex flex-col md:flex-row justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold mb-4 md:mb-0">Participants</h1>
-    <div>
-        <a href="{% url 'participant-create' %}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-            <i class="fas fa-plus mr-2"></i>Add Participant
-        </a>
-    </div>
-</div>
+{% block title %}{{ event.name }} - Participants{% endblock %}
 
-<div class="bg-white rounded-lg shadow-md overflow-hidden">
-    {% if participants %}
-    <div class="overflow-x-auto">
-        <table class="min-w-full">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="py-3 px-4 text-left">Name</th>
-                    <th class="py-3 px-4 text-left">Email</th>
-                    <th class="py-3 px-4 text-left">Events Attending</th>
-                    <th class="py-3 px-4 text-left">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for participant in participants %}
-                <tr class="border-t hover:bg-gray-50">
-                    <td class="py-3 px-4">{{ participant.name }}</td>
-                    <td class="py-3 px-4">{{ participant.email }}</td>
-                    <td class="py-3 px-4">{{ participant.events.count }}</td>
-                    <td class="py-3 px-4 flex space-x-3">
-                        <a href="{% url 'participant-update' participant.pk %}" class="text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{% url 'participant-delete' participant.pk %}" class="text-red-600 hover:text-red-800">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center mb-4">
+            <a href="{% url 'event_detail' event.pk %}" class="text-blue-600 hover:text-blue-800 flex items-center mr-4">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Event
+            </a>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900">{{ event.name }} - Participants</h1>
+        <p class="mt-2 text-gray-600">{{ rsvps.count }} participant{{ rsvps.count|pluralize }} attending this event</p>
+    </div>
+
+    <!-- Event Info Card -->
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <div>
+                    <p class="font-medium text-gray-900">Date</p>
+                    <p class="text-gray-600">{{ event.date|date:"M d, Y" }}</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <p class="font-medium text-gray-900">Time</p>
+                    <p class="text-gray-600">{{ event.time|time:"g:i A" }}</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <div>
+                    <p class="font-medium text-gray-900">Location</p>
+                    <p class="text-gray-600">{{ event.location }}</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <div>
+                    <p class="font-medium text-gray-900">Capacity</p>
+                    <p class="text-gray-600">{{ rsvps.count }}/{{ event.max_participants|default:"∞" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participants List -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        {% if rsvps %}
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Attending Participants</h3>
+            <div class="space-y-4">
+                {% for rsvp in rsvps %}
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold">{{ rsvp.user.first_name.0|default:rsvp.user.username.0|upper }}</span>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-gray-900">
+                                    {{ rsvp.user.first_name|default:rsvp.user.username }}
+                                    {% if rsvp.user.last_name %}{{ rsvp.user.last_name }}{% endif %}
+                                </h4>
+                                <p class="text-gray-600">{{ rsvp.user.email }}</p>
+                                {% if rsvp.notes %}
+                                <p class="text-sm text-gray-500 mt-1"><strong>Notes:</strong> {{ rsvp.notes }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Attending
+                            </span>
+                            <p class="text-xs text-gray-500 mt-1">RSVP'd {{ rsvp.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No participants yet</h3>
+            <p class="mt-1 text-sm text-gray-500">No one has RSVP'd to this event yet.</p>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="p-8 text-center text-gray-500">
-        <i class="fas fa-user-slash text-4xl mb-4"></i>
-        <p class="text-xl">No participants found</p>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

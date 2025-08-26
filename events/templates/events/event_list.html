@@ -4,7 +4,7 @@
 <div class="flex flex-col md:flex-row justify-between items-center mb-6">
     <h1 class="text-3xl font-bold mb-4 md:mb-0">Events</h1>
     <div>
-        <a href="{% url 'event-create' %}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+        <a href="{% url 'event_create' %}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
             <i class="fas fa-plus mr-2"></i>Add Event
         </a>
     </div>
@@ -42,7 +42,7 @@
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                 <i class="fas fa-filter mr-2"></i>Apply Filters
             </button>
-            <a href="{% url 'event-list' %}" class="ml-2 text-gray-600 hover:text-gray-800">
+            <a href="{% url 'event_list' %}" class="ml-2 text-gray-600 hover:text-gray-800">
                 <i class="fas fa-sync mr-1"></i>Reset
             </a>
         </div>
@@ -68,7 +68,7 @@
                 {% for event in events %}
                 <tr class="border-t hover:bg-gray-50">
                     <td class="py-3 px-4">
-                        <a href="{% url 'event-detail' event.pk %}" class="text-blue-600 hover:underline">
+                        <a href="{% url 'event_detail' event.pk %}" class="text-blue-600 hover:underline">
                             {{ event.name }}
                         </a>
                     </td>
@@ -77,10 +77,10 @@
                     <td class="py-3 px-4">{{ event.category.name }}</td>
                     <td class="py-3 px-4">{{ event.participant_count }}</td>
                     <td class="py-3 px-4 flex space-x-2">
-                        <a href="{% url 'event-update' event.pk %}" class="text-blue-600 hover:text-blue-800">
+                        <a href="{% url 'event_edit' event.pk %}" class="text-blue-600 hover:text-blue-800">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="{% url 'event-delete' event.pk %}" class="text-red-600 hover:text-red-800">
+                        <a href="{% url 'event_delete' event.pk %}" class="text-red-600 hover:text-red-800">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

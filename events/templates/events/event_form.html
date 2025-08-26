@@ -27,7 +27,7 @@
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                 {% if object %}<i class="fas fa-save mr-2"></i>Update{% else %}<i class="fas fa-plus mr-2"></i>Create{% endif %}
             </button>
-            <a href="{% if object %}{% url 'event-detail' object.pk %}{% else %}{% url 'event-list' %}{% endif %}" 
+            <a href="{% if object %}{% url 'event_detail' object.pk %}{% else %}{% url 'event_list' %}{% endif %}" 
                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
                 <i class="fas fa-times mr-2"></i>Cancel
             </a>

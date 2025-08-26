@@ -1,0 +1,84 @@
+{% extends 'events/base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+        <i class="fas fa-user mr-2"></i>User Profile
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- User Information -->
+        <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                <i class="fas fa-info-circle mr-2"></i>Personal Information
+            </h3>
+            <div class="space-y-2">
+                <p><span class="font-medium">Username:</span> {{ user.username }}</p>
+                <p><span class="font-medium">Name:</span> {{ user.first_name }} {{ user.last_name }}</p>
+                <p><span class="font-medium">Email:</span> {{ user.email }}</p>
+                <p><span class="font-medium">Joined:</span> {{ user.date_joined|date:"M d, Y" }}</p>
+                <p><span class="font-medium">Status:</span> 
+                    {% if profile.is_activated %}
+                        <span class="text-green-600">Activated</span>
+                    {% else %}
+                        <span class="text-red-600">Not Activated</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <!-- User Roles -->
+        <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                <i class="fas fa-user-tag mr-2"></i>Roles & Permissions
+            </h3>
+            <div class="space-y-2">
+                {% if user_groups %}
+                    {% for group in user_groups %}
+                        <span class="inline-block bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded-full">
+                            {{ group.name }}
+                        </span>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-500">No roles assigned</p>
+                {% endif %}
+                
+                {% if user.is_superuser %}
+                    <span class="inline-block bg-red-100 text-red-800 text-sm px-2 py-1 rounded-full">
+                        Superuser
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Event Statistics -->
+    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+            <i class="fas fa-chart-bar mr-2"></i>Event Statistics
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="text-center">
+                <p class="text-2xl font-bold text-blue-600">{{ user.joined_events.count }}</p>
+                <p class="text-sm text-gray-600">Events Joined</p>
+            </div>
+            {% if user.groups.all|length > 0 and user.groups.first.name in "Admin,Organizer" %}
+            <div class="text-center">
+                <p class="text-2xl font-bold text-green-600">{{ user.created_events.count }}</p>
+                <p class="text-sm text-gray-600">Events Created</p>
+            </div>
+            <div class="text-center">
+                <p class="text-2xl font-bold text-purple-600">{{ user.created_categories.count }}</p>
+                <p class="text-sm text-gray-600">Categories Created</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-6 text-center">
+        <a href="{% url 'dashboard' %}" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
